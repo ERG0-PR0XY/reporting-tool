@@ -1,0 +1,32 @@
+[
+    {
+        "id" : 1,
+        "first_name" : "Jerin",
+        "last_name" : "Constant",
+        "email" : "scarletkn8@gmail.com"
+    },
+    {
+        "id" : 2,
+        "first_name" : "John",
+        "last_name" : "Doe",
+        "email" : "scarletkn8@gmail.com"
+    },
+    {
+        "id" : 3,
+        "first_name" : "John",
+        "last_name" : "Smith",
+        "email" : "scarletkn8@gmail.com"
+    },
+    {
+        "id" : 4,
+        "first_name" : "Robert",
+        "last_name" : "Murdock",
+        "email" : "scarletkn8@gmail.com"
+    },
+    {
+        "id" : 5,
+        "first_name" : "Luke",
+        "last_name" : "Skywalker",
+        "email" : "scarletkn8@gmail.com"
+    }
+]
