@@ -25,12 +25,44 @@ module.exports.generateReport = (data, filename, title) => {
         };
     
     var detail = function(Report, Data) {
-            Report.band([
-                {data: Data.id, width: 50, align: 1},
-                {data: Data.first_name, width: 100},
-                {data: Data.last_name, width: 100},
-                {data: Data.email, width: 250}
-                ], {border: 1, width: 0});
+            if(Data.success) {
+                var successData = Data.success;
+                Report.print('Companys Without Issues', {addX: 12, underline: true, fontBold: true});
+                for(var i=0 ; i < successData ; i++) {
+                    Report.print(successData[i], {addX: 24});
+                }
+            }
+            if(Data.failed) {
+                var failedData = Data.failed;
+                Report.print('Companys With Data Issues', {addX: 12, underline: true, fontBold: true});
+                Object.keys(failedData).forEach(function(prop) {
+                    Report.print('Company Id: '+prop, {addX: 24});
+                    var companyData = failedData[prop];
+                    for(var j=0 ; j < companyData.length ; j++) {
+                        Report.print('Traveler Group - ' + (j+1), {addX: 36, underline : true});
+                        Report.print('Traveler Group Id: ' + companyData[j].traveler_group_id, {addX: 36, fill:"#fffaa0"});
+                        Report.print('Traveler Group Name: ' + companyData[j].traveler_group_name, {addX: 36, fill:"#fffaa0"});
+                        Report.print('No. Of Legacy Location Exceptions: ' + companyData[j].no_of_legacy_origin_destinations, {addX: 36});
+                        Report.print('No. Of Global Location Exemptions: ' + companyData[j].no_of_global_origin_destinations, {addX: 36});
+                        Report.print('No. Of Legacy Duration Exceptions: ' + companyData[j].no_of_legacy_duration_exceptions, {addX: 36});
+                        Report.print('No. Of Global Duration Exemptions: ' + companyData[j].no_of_global_duration_exemptions, {addX: 36});
+                        Report.print('Reason: ' + companyData[j].reason, {addX: 36});
+                        var locations = companyData[j].missing_locations;
+                        Report.print('Missing Location Exceptions', {addX: 36});
+                        for(var x=0 ; x < locations.length ; x++) {
+                            Report.print('Location - ' + (x+1), {addX: 48, underline : true});
+                            Report.print('Restriction Class Code: ' + locations[x].restriction_class_code, {addX: 48});
+                            Report.print('Priority: ' + locations[x].priority, {addX: 48});
+                            Report.print('Policy Exception Type: ' + locations[x].policy_exception_type_key, {addX: 48});
+                            Report.print('From Area Loc: ' + locations[x].from_area_loc, {addX: 48});
+                            Report.print('From Scale Code: ' + locations[x].from_scale_code, {addX: 48});
+                            Report.print('To Area Loc: ' + locations[x].to_area_loc, {addX: 48});
+                            Report.print('To Scale Loc: ' + locations[x].to_scale_code, {addX: 48});
+                        }
+                        
+                    }
+                });
+            }
         };
 
     var dataHeader = function(Report, Data) {
@@ -51,7 +83,7 @@ module.exports.generateReport = (data, filename, title) => {
         .data(DATA)
         .pageFooter(footerFunction)
         //.detail( [['id', 50], ['first_name', 100], ['last_name', 100], ['email', 250]])
-        .header(dataHeader)
+        // .header(dataHeader)
         .detail(detail)
         .groupBy('id');
         // .detail("{{id}} || {{first_name}} || {{last_name}} || {{email}}");
