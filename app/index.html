@@ -19,16 +19,36 @@
         <div class="mui-panel">
             <form class="mui-form" action="/validate" method="POST">
                 <legend>Validation Report Tool</legend>
-                <div class="mui-textfield">
-                    <input type="text" name="authToken" placeholder="Auth Token">
+                <div class="mui-select">
+                    <select name="env">
+                        <option value="TEST_URL">TEST</option>
+                        <option value="MAUI_URL">MAUI</option>
+                        <option value="MILAN_URL">MILAN</option>
+                        <option value="DL_URL">DL</option>
+                        <option value="PROD_URL">PROD</option>
+                    </select>
+                    <label>Environment</label>
                 </div>
-                <div class="mui-textfield">
-                    <input type="text" name="companyIds" placeholder="Company Ids">
+                <div class="mui-textfield mui-textfield--float-label">
+                    <input type="text" name="authToken" required>
+                    <label>Auth Token</label>
                 </div>
-                <div class="mui-textfield">
-                    <input type="text" name="lob" placeholder="Lob">
+                <div class="mui-textfield mui-textfield--float-label">
+                    <input type="text" name="companyIds" required>
+                    <label>Company Ids</label>
                 </div>
-                <button type="submit" class="mui-btn mui-btn--raised">Submit</button>
+                <!-- <div class="mui-textfield mui-textfield--float-label">
+                    <input type="text" name="lob" required>
+                    <label>Lob</label>
+                </div> -->
+                <div class="mui-select">
+                    <select name="lob">
+                        <option value="AIR">AIR</option>
+                        <option value="HOTEL">HOTEL</option>
+                    </select>
+                    <label>Lob</label>
+                </div>
+                <button type="submit" class="mui-btn mui-btn--primary">Submit</button>
             </form>
         </div>
     </div>

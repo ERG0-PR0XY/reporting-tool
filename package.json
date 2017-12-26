@@ -5,8 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start-all" : "concurrently --kill-others \"npm run dev\" \"npm run start-db\"",
     "dev": "nodemon server.js",
-    "start-db" : "json-server --watch app/db/mock-db.json"
+    "start-db": "json-server --watch app/db/mock-db.json"
   },
   "author": "Jerin.Constant",
   "license": "ISC",
@@ -17,6 +18,8 @@
     "superagent": "^3.8.2"
   },
   "devDependencies": {
+    "concurrently": "^3.5.1",
+    "node-logger": "0.0.1",
     "nodemon": "^1.13.3"
   }
 }

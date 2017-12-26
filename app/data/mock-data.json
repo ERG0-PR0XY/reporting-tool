@@ -1,32 +1,49 @@
-[
-    {
-        "id" : 1,
-        "first_name" : "Jerin",
-        "last_name" : "Constant",
-        "email" : "scarletkn8@gmail.com"
-    },
-    {
-        "id" : 2,
-        "first_name" : "John",
-        "last_name" : "Doe",
-        "email" : "scarletkn8@gmail.com"
-    },
-    {
-        "id" : 3,
-        "first_name" : "John",
-        "last_name" : "Smith",
-        "email" : "scarletkn8@gmail.com"
-    },
-    {
-        "id" : 4,
-        "first_name" : "Robert",
-        "last_name" : "Murdock",
-        "email" : "scarletkn8@gmail.com"
-    },
-    {
-        "id" : 5,
-        "first_name" : "Luke",
-        "last_name" : "Skywalker",
-        "email" : "scarletkn8@gmail.com"
-    }
-]
+{
+  "success": ["19344"],
+  "failed": {
+    "19321": [
+      {
+        "traveler_group_id": "510115",
+        "traveler_group_name": "Tillfällig",
+        "no_of_legacy_origin_destinations": 2,
+        "no_of_global_origin_destinations": 2,
+        "no_of_legacy_duration_exceptions": 2,
+        "no_of_global_duration_exemptions": 2,
+        "missing_locations": [
+          {
+            "type": "LOCATION_POLICY_EXCEPTION",
+            "restriction_class_code": "PREMIUM_ECO",
+            "priority": 3,
+            "policy_exception_type_key": "LOCATION",
+            "from_area_loc": "GEO",
+            "to_area_loc": "COK",
+            "from_scale_code": "COUNTRY",
+            "to_scale_code": "CITY"
+          }
+        ],
+        "reason": "DURATION_OR_LOCATION_NOT_MIGRATED"
+      },
+      {
+        "traveler_group_id": "513703",
+        "traveler_group_name": "Client facing",
+        "no_of_legacy_origin_destinations": 2,
+        "no_of_global_origin_destinations": 2,
+        "no_of_legacy_duration_exceptions": 2,
+        "no_of_global_duration_exemptions": 2,
+        "missing_locations": [
+          {
+            "type": "LOCATION_POLICY_EXCEPTION",
+            "restriction_class_code": "BUSINESS",
+            "priority": 2,
+            "policy_exception_type_key": "LOCATION",
+            "from_area_loc": "LAX",
+            "to_area_loc": "BOD",
+            "from_scale_code": "CITY",
+            "to_scale_code": "AIRPORT"
+          }
+        ],
+        "reason": "DURATION_OR_LOCATION_NOT_MIGRATED"
+      }
+    ]
+  }
+}
