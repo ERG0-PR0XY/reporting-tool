@@ -88,7 +88,7 @@ app.post("/validate", (request, response) => {
 
   airHCCValidationService.getAirHCCValidation(
     data,
-    constants.MOCK_URL,
+    url,
     authToken,
     callback
   );
