@@ -47,8 +47,8 @@ module.exports.generateReport = (data, filename, title) => {
         Report.print(successData[i], { addX: 24 });
       }
     }
-    if (Data.failed) {
-      var failedData = Data.failed;
+    if (Data.failed_air_hcc_classes) {
+      var failedData = Data.failed_air_hcc_classes;
       Report.print("Failed to Migrate", {
         addX: 12,
         underline: true,

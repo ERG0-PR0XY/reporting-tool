@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 var request = require("superagent");
+var tableify = require("tableify");
 const logger = require("node-logger").createLogger("./app/logs/server.log");
 const app = express();
 
@@ -25,13 +26,13 @@ app.get("/", (req, res) => {
 });
 
 app.post("/validate", (request, response) => {
-  var authToken, data, url, result, env, filename, callback;
+  var authToken, data, url, result, env, filename, callback, pdfFilename, jsonFilename, htmlFilename;
 
   env = request.body.env;
   authToken = request.body.authToken;
   data = {
-    companyIds: request.body.companyIds,
-    lob: request.body.lob
+    company_ids: request.body.companyIds,
+    lobs: request.body.lob
   };
   url = constants[env];
 
@@ -46,6 +47,12 @@ app.post("/validate", (request, response) => {
     "air-hcc-validation-[" +
     util.getDateTime() +
     "].json";
+
+  htmlFilename =
+    constants.REPORT_BASE_PATH +
+    "air-hcc-validation-[" +
+    util.getDateTime() +
+    "].html";
 
   logger.info(
     "Validate-Controller : env = ",
@@ -62,8 +69,10 @@ app.post("/validate", (request, response) => {
     if (!err && res && res.ok) {
       result = res.body;
       logger.info("Validate-Controller : Response body = ", result);
-      // testReportService.generateReport(result, pdfFilename, "Test Report");
-      // util.writeDataToJSONFile(result, jsonFilename);
+      airHCCValidationReport.generateReport(result, pdfFilename, "Air HCC Validation Report");
+      util.writeDataToJSONFile(result, jsonFilename);
+      util.writeDataToHTMLFile(result, htmlFilename);
+      // response.sendFile(__dirname + '/' + htmlFilename);
       response.redirect("/");
     } else {
       logger.error(
@@ -83,45 +92,15 @@ app.post("/validate", (request, response) => {
     authToken,
     callback
   );
+});
 
-  airHCCValidationReport.generateReport(
-    mockData,
-    pdfFilename,
-    "Air HCC Validation Report"
-  );
-  util.writeDataToJSONFile(mockData, jsonFilename);
-  response.redirect("/");
-
-  // callback = (err, res) => {
-  //   if (res && res.ok) {
-  //     result = res.body;
-  //     logger.info("Validate-Controller : Response body = ", result);
-  //     pdfFilename =
-  //       constants.REPORT_BASE_PATH +
-  //       "user-list-[" +
-  //       util.getDateTime() +
-  //       "].pdf";
-  //     jsonFilename =
-  //       constants.REPORT_BASE_PATH +
-  //       "user-list-[" +
-  //       util.getDateTime() +
-  //       "].json";
-  //     testReportService.generateReport(result, pdfFilename, "Test Report");
-  //     util.writeDataToJSONFile(result, jsonFilename);
-  //     response.redirect("/");
-  //   }
-  //   if (err) {
-  //     logger.error(
-  //       "Validate-Controller : Error fetching result url = ",
-  //       url,
-  //       " data = ",
-  //       data,
-  //       " env = ",
-  //       env
-  //     );
-  //   }
-  // };
-  // testService.getTestServiceResponse(data, url, authToken, callback);
+app.get("/success", (req, res) => {
+  var page = "/app/reports/air-hcc-validation-[28-12-2017 18.58.3].html";
+  if(page) {
+    console.log(__dirname + page);
+    res.sendFile(__dirname + page);
+  }
+  res.redirect('/');
 });
 
 app.listen(HTTP_PORT, () => {
