@@ -18,6 +18,8 @@ const airHCCValidationReport = require("./app/reporting-service/air-hcc-validati
 
 const rulesService = require("./app/service/rules-service");
 
+const rwgService = require("./app/service/rwg-service");
+
 const BASE_PATH = "/app";
 const HTTP_PORT = 3030;
 
@@ -162,6 +164,95 @@ app.post("/backup_rules", (request, response) => {
   };
 
   rulesService.getRulesForCompanyIds(
+    data,
+    url,
+    authToken,
+    callback
+  );
+});
+
+app.get("/rwg", (req, res) => {
+  res.sendfile(__dirname + BASE_PATH + "/rwg.html");
+});
+
+app.post("/rwg_validate", (request, response) => {
+  var authToken, 
+      data, 
+      url, 
+      result, 
+      env, 
+      filename, 
+      callback, 
+      pdfFilename, 
+      jsonFilename, 
+      htmlFilename,
+      companyIds,
+      fromToCompanyIds;
+
+  env = request.body.env;
+  authToken = request.body.authToken;
+  data = {
+    companyId: request.body.companyIds
+  };
+  url = constants[env];
+
+  if(data.companyId) {
+    companyIds = (data.companyId).split(',');
+    fromToCompanyIds = companyIds[0] + "-" + companyIds[companyIds.length - 1];
+  }
+
+  pdfFilename =
+    constants.REPORT_BASE_PATH +
+    "rwg-validation-"+fromToCompanyIds+"-[" +
+    util.getDateTime() +
+    "].pdf";
+
+  jsonFilename =
+    constants.REPORT_BASE_PATH +
+    "rwg-validation-"+fromToCompanyIds+"-[" +
+    util.getDateTime() +
+    "].json";
+
+  htmlFilename =
+    constants.REPORT_BASE_PATH +
+    "rwg-validation-"+fromToCompanyIds+"-[" +
+    util.getDateTime() +
+    "].html";
+
+  logger.info(
+    "rwg-Controller : env = ",
+    env,
+    " data = ",
+    data,
+    " url = ",
+    url,
+    " authToken = ",
+    authToken
+  );
+
+  callback = (err, res) => {
+    if (!err && res && res.ok) {
+      result = res.body;
+      logger.info("Validate-Controller : Response body = ", result);
+      util.writeDataToJSONFile(result, jsonFilename);
+      util.writeDataToHTMLFile(result, htmlFilename);
+      response.redirect("/success");
+    } else {
+      logger.error(
+        "RWG-Validate-Controller : Error fetching result url = ",
+        url,
+        " data = ",
+        data,
+        " env = ",
+        env,
+		" error = ",
+		err
+      );
+	  response.redirect("/error");
+    }
+  };
+
+  rwgService.getRWGValidation(
     data,
     url,
     authToken,

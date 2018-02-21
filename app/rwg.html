@@ -1,0 +1,47 @@
+<html>
+    
+    <head>
+        <title>Validation Reporting App | Home</title>
+    
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- load MUI -->
+        <link href="//cdn.muicss.com/mui-0.9.34/css/mui.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    
+    <body>
+        <header class="mui-appbar mui--z1">
+            <!-- Appbar HTML goes here -->
+        </header>
+        <br>
+        <div class="mui-container">
+            <div class="mui-panel">
+                <form class="mui-form" action="/rwg_validate" method="POST">
+                    <legend>RWG Validation Tool</legend>
+                    <div class="mui-select">
+                        <select name="env">
+                            <option value="RWG_VALIDATE_URL">RWG Validation</option>
+                            <!-- <option value="MAUI_URL">MAUI</option>
+                            <option value="MILAN_URL">MILAN</option>
+                            <option value="DL_URL">DL</option>
+                            <option value="PROD_URL">PROD</option> -->
+                        </select>
+                        <label>Environment</label>
+                    </div>
+                    <div class="mui-textfield mui-textfield--float-label">
+                        <input type="text" name="authToken" required>
+                        <label>Auth Token</label>
+                    </div>
+                    <div class="mui-textfield mui-textfield--float-label">
+                        <input type="text" name="companyIds" required>
+                        <label>Company Ids</label>
+                    </div>
+                    <button type="submit" class="mui-btn mui-btn--primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <script src="//cdn.muicss.com/mui-0.9.34/js/mui.min.js"></script>
+    </body>
+    
+    </html>
