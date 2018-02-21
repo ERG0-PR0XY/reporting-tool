@@ -16,6 +16,8 @@ const airHCCValidationService = require("./app/service/air-hcc-validation-servic
 var testReportService = require("./app/reporting-service/test-user-report");
 const airHCCValidationReport = require("./app/reporting-service/air-hcc-validation-report");
 
+const rulesService = require("./app/service/rules-service");
+
 const BASE_PATH = "/app";
 const HTTP_PORT = 3030;
 
@@ -95,12 +97,76 @@ app.post("/validate", (request, response) => {
 });
 
 app.get("/success", (req, res) => {
-  var page = "/app/reports/air-hcc-validation-[28-12-2017 18.58.3].html";
-  if(page) {
-    console.log(__dirname + page);
-    res.sendFile(__dirname + page);
-  }
-  res.redirect('/');
+  res.sendfile(__dirname + BASE_PATH + "/success.html");
+});
+
+app.get("/error", (req, res) => {
+  res.sendfile(__dirname + BASE_PATH + "/error.html");
+});
+
+
+app.get("/rules", (req, res) => {
+  res.sendfile(__dirname + BASE_PATH + "/rules_backup.html");
+});
+
+app.post("/backup_rules", (request, response) => {
+  var authToken, 
+      data, 
+      url, 
+      result, 
+      env, 
+      filename, 
+      callback, 
+      jsonFilename, 
+      htmlFilename;
+  
+    env = request.body.env;
+    authToken = request.body.authToken;
+    data = {
+      companyIds: request.body.companyIds,
+    };
+
+    url = constants[env];
+  
+    jsonFilename =
+      constants.REPORT_BASE_PATH +
+      "rules-backup-[" +
+      util.getDateTime() +
+      "].json";
+  
+    htmlFilename =
+      constants.REPORT_BASE_PATH +
+      "rules-backup-[" +
+      util.getDateTime() +
+      "].html";
+
+
+  callback = (err, res) => {
+    if (!err && res && res.ok) {
+      result = res.body;
+      logger.info("Rules-Controller : Response body = ", result);
+      util.writeDataToJSONFile(result, jsonFilename);
+      util.writeDataToHTMLFile(result, htmlFilename);
+      response.redirect("/success");
+    } else {
+      logger.error(
+        "Rules-Controller : Error fetching result url = ",
+        url,
+        " data = ",
+        data,
+        " env = ",
+        env
+      );
+      response.redirect("/error");
+    }
+  };
+
+  rulesService.getRulesForCompanyIds(
+    data,
+    url,
+    authToken,
+    callback
+  );
 });
 
 app.listen(HTTP_PORT, () => {

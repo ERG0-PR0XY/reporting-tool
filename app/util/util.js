@@ -45,7 +45,7 @@ module.exports = {
 
   writeDataToHTMLFile : (data, filename) => {
     var html, head, body, table;
-    head = '<head><title>Air HCC Validation Report</title><style>table,td,th { border: 1px solid black;}'
+    head = '<style>table,td,th { border: 1px solid black;}'
           + 'th { background-color: #609cea;}</style></head>';
     table = tableify(data);
     body = '<body>' + table + '</body>';
