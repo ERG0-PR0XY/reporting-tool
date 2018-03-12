@@ -10,7 +10,7 @@ const util = require("./app/util/util");
 
 let mockData = require("./app/data/response");
 var report = require("./app/reporting-js/test-report");
-const testService = require("./app/service/test-service");
+const validationService = require("./app/service/validation-service");
 const airHCCValidationService = require("./app/service/air-hcc-validation-service");
 
 var testReportService = require("./app/reporting-service/test-user-report");
@@ -36,25 +36,26 @@ app.post("/validate", (request, response) => {
   authToken = request.body.authToken;
   data = {
     company_ids: request.body.companyIds,
-    lobs: request.body.lob
+    lobs: request.body.lob,
+    rwg: request.body.rwg
   };
   url = constants[env];
 
-  pdfFilename =
-    constants.REPORT_BASE_PATH +
-    "air-hcc-validation-[" +
-    util.getDateTime() +
-    "].pdf";
+  // pdfFilename =
+  //   constants.REPORT_BASE_PATH +
+  //   "air-hcc-validation-[" +
+  //   util.getDateTime() +
+  //   "].pdf";
 
   jsonFilename =
-    constants.REPORT_BASE_PATH +
-    "air-hcc-validation-[" +
+    constants.REPORT_BASE_PATH + request.body.lob +
+    "-validation-[" +
     util.getDateTime() +
     "].json";
 
   htmlFilename =
-    constants.REPORT_BASE_PATH +
-    "air-hcc-validation-[" +
+    constants.REPORT_BASE_PATH + request.body.lob +
+    "-validation-[" +
     util.getDateTime() +
     "].html";
 
@@ -73,11 +74,10 @@ app.post("/validate", (request, response) => {
     if (!err && res && res.ok) {
       result = res.body;
       logger.info("Validate-Controller : Response body = ", result);
-      airHCCValidationReport.generateReport(result, pdfFilename, "Air HCC Validation Report");
+      // airHCCValidationReport.generateReport(result, pdfFilename, "Air HCC Validation Report");
       util.writeDataToJSONFile(result, jsonFilename);
       util.writeDataToHTMLFile(result, htmlFilename);
-      // response.sendFile(__dirname + '/' + htmlFilename);
-      response.redirect("/");
+      response.redirect("/success");
     } else {
       logger.error(
         "Validate-Controller : Error fetching result url = ",
@@ -90,25 +90,27 @@ app.post("/validate", (request, response) => {
     }
   };
 
-  airHCCValidationService.getAirHCCValidation(
-    data,
-    url,
-    authToken,
-    callback
-  );
+  validationService.validateForLOB(data.lobs, data, url, authToken, callback);
+
+  // airHCCValidationService.getAirHCCValidation(
+  //   data,
+  //   url,
+  //   authToken,
+  //   callback
+  // );
 });
 
 app.get("/success", (req, res) => {
-  res.sendfile(__dirname + BASE_PATH + "/success.html");
+  res.sendFile(__dirname + BASE_PATH + "/success.html");
 });
 
 app.get("/error", (req, res) => {
-  res.sendfile(__dirname + BASE_PATH + "/error.html");
+  res.sendFile(__dirname + BASE_PATH + "/error.html");
 });
 
 
 app.get("/rules", (req, res) => {
-  res.sendfile(__dirname + BASE_PATH + "/rules_backup.html");
+  res.sendFile(__dirname + BASE_PATH + "/rules_backup.html");
 });
 
 app.post("/backup_rules", (request, response) => {
@@ -172,7 +174,7 @@ app.post("/backup_rules", (request, response) => {
 });
 
 app.get("/rwg", (req, res) => {
-  res.sendfile(__dirname + BASE_PATH + "/rwg.html");
+  res.sendFile(__dirname + BASE_PATH + "/rwg.html");
 });
 
 app.post("/rwg_validate", (request, response) => {
